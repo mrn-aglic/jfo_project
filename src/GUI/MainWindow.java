@@ -66,21 +66,15 @@ public class MainWindow extends JFrame {
 
         int nodeSize = 30;
 
-        Node n1 = new Node(nodeSize, 5);
-        Node n2 = new Node(nodeSize, 6);
-        Node n3 = new Node(nodeSize, 2);
-        Node n4 = new Node(nodeSize, n1, 3);
-        Node n5 = new Node(nodeSize, n2, 4);
+        Node n1 = new Node(nodeSize, 1);
+        Node n2 = new Node(nodeSize, n1, 2);
+        Node n3 = new Node(nodeSize, n1, 3);
+        Node n4 = new Node(nodeSize, n3, 4);
+        Node n5 = new Node(nodeSize, n3, 5);
 
-        ArrayList<Node> temp = new ArrayList<>();
+        Node n6 = new Node(nodeSize, n2, 6);
 
-        temp.add(n3);
-        temp.add(n4);
-        temp.add(n5);
-
-        Node n6 = new Node(nodeSize, temp, 1);
-
-        panel.drawTree(n6);
+        panel.drawTree(n1);
     }
 
     private JPanel initTop(){

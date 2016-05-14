@@ -11,6 +11,7 @@ import java.util.ArrayList;
  */
 public class Node {
 
+    private Node parent;
     private ArrayList<Node> children;
     private int size;
     private Ellipse2D bounds;
@@ -21,6 +22,7 @@ public class Node {
 
         children = new ArrayList<Node>();
         this.data = data;
+        this.parent = null;
 
         this.bounds = new Ellipse2D.Double(0, 0, size, size);
         this.size = size;
@@ -30,14 +32,16 @@ public class Node {
 
         this(size, data);
 
-        children.add(node);
+        setParent(node);
+
+        node.getChildren().add(this);
     }
 
-    public Node(int size, ArrayList<Node> nodes, int data) {
+    public Node(int size, Node node, ArrayList<Node> children, int data) {
 
-        this(size, data);
+        this(size, node, data);
 
-        this.children.addAll(nodes);
+        setChildren(children);
     }
 
     public void paint(Graphics2D g){
@@ -75,6 +79,21 @@ public class Node {
         this.bounds = bounds;
     }
 
+    public void setParent(Node n){
+
+        parent = n;
+    }
+
+    public Node getParent(){
+
+        return parent;
+    }
+
+    public void setChildren(ArrayList<Node> children){
+
+        this.children = children;
+    }
+
     public ArrayList<Node> getChildren(){
 
         return children;
@@ -93,6 +112,21 @@ public class Node {
     public void moveTo(Point2D point){
 
         setBounds(new Ellipse2D.Double((int)point.getX(), (int)point.getY(), size, size));
+    }
+
+    public boolean isDescendant(Node n){
+
+        if(n == null) return false;
+        else if(n.getChildren().contains(this)) return true;
+        else {
+
+            for(Node node: n.getChildren()){
+
+                if(isDescendant(node)) return true;
+            }
+
+            return false;
+        }
     }
 
     @Override

@@ -112,9 +112,10 @@ public class GraphPane extends JPanel {
                     Node overlap = findFirst(root, n -> selectedNode != n && selectedNode.getBounds()
                             .intersects(n.getBounds().getCenterX(), n.getBounds().getCenterY(), n.getBounds().getWidth(), n.getBounds().getHeight()));
 
-                    if(overlap != null && !selectedNode.getChildren().contains(overlap)){
+                    if(overlap != null ){//&& (selectedNode.getChildren().isEmpty())){
 
-                        switchNode(root, overlap);
+                        swithcNode2(overlap);
+                        //switchNode(root, overlap);
 
                         nodesAtDepth = fillNodesAtDepth(root, 0, new HashMap<>());
                         maxDepth = nodesAtDepth.keySet().stream().max(Comparator.comparing(x -> x)).get();
@@ -124,12 +125,6 @@ public class GraphPane extends JPanel {
                 repaint();
             }
         });
-    }
-
-    // TO DO:
-    private boolean ifNotDescendant(){
-
-        return false;
     }
 
     private Node findFirst(Node root, Function<Node, Boolean> f){
@@ -211,14 +206,56 @@ public class GraphPane extends JPanel {
         return depthNum;
     }
 
+    private void swithcNode2(Node overlap){
+
+        if(overlap.isDescendant(selectedNode)) {
+
+            Node selectedParent = selectedNode.getParent();
+            Node overlapParent = overlap.getParent();
+
+            selectedParent.getChildren().remove(selectedNode);
+
+            selectedParent.getChildren().add(overlap);
+
+            overlap.setParent(selectedParent);
+            overlapParent.getChildren().remove(overlap);
+
+            selectedNode.setParent(overlap);
+        }
+        else {
+
+            Node selectedParent = selectedNode.getParent();
+
+            selectedParent.getChildren().remove(selectedNode);
+
+            overlap.getChildren().add(selectedNode);
+            selectedNode.setParent(overlap);
+        }
+    }
+
     private void switchNode(Node root, Node newParent){
 
         if(root == null) return;
 
-        if(root.getChildren().contains(selectedNode))
-            root.getChildren().remove(selectedNode);
+        if(newParent.isDescendant(selectedNode)){
 
-        if(root == newParent) newParent.getChildren().add(selectedNode);
+            newParent.getParent().getChildren().remove(newParent);
+            newParent.setParent(selectedNode.getParent());
+            newParent.getChildren().add(selectedNode);
+            selectedNode.setParent(newParent);
+        }
+
+        if(root.getChildren().contains(selectedNode)){
+
+            root.getChildren().remove(selectedNode);
+            selectedNode.setParent(null);
+        }
+
+        if(root == newParent) {
+
+            newParent.getChildren().add(selectedNode);
+            selectedNode.setParent(root);
+        }
 
         for(Node n: root.getChildren()){
 
