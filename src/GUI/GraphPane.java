@@ -114,8 +114,7 @@ public class GraphPane extends JPanel {
 
                     if(overlap != null ){//&& (selectedNode.getChildren().isEmpty())){
 
-                        swithcNode2(overlap);
-                        //switchNode(root, overlap);
+                        swithcNode(overlap);
 
                         nodesAtDepth = fillNodesAtDepth(root, 0, new HashMap<>());
                         maxDepth = nodesAtDepth.keySet().stream().max(Comparator.comparing(x -> x)).get();
@@ -206,7 +205,7 @@ public class GraphPane extends JPanel {
         return depthNum;
     }
 
-    private void swithcNode2(Node overlap){
+    private void swithcNode(Node overlap){
 
         if(overlap.isDescendant(selectedNode)) {
 
@@ -230,36 +229,6 @@ public class GraphPane extends JPanel {
 
             overlap.getChildren().add(selectedNode);
             selectedNode.setParent(overlap);
-        }
-    }
-
-    private void switchNode(Node root, Node newParent){
-
-        if(root == null) return;
-
-        if(newParent.isDescendant(selectedNode)){
-
-            newParent.getParent().getChildren().remove(newParent);
-            newParent.setParent(selectedNode.getParent());
-            newParent.getChildren().add(selectedNode);
-            selectedNode.setParent(newParent);
-        }
-
-        if(root.getChildren().contains(selectedNode)){
-
-            root.getChildren().remove(selectedNode);
-            selectedNode.setParent(null);
-        }
-
-        if(root == newParent) {
-
-            newParent.getChildren().add(selectedNode);
-            selectedNode.setParent(root);
-        }
-
-        for(Node n: root.getChildren()){
-
-            switchNode(n, newParent);
         }
     }
 
